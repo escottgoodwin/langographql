@@ -1,6 +1,5 @@
 require('dotenv').config();
-var firebase = require("firebase/app");
-require("firebase/auth");
+var admin = require("firebase-admin");
 
 const Pool = require('pg').Pool
 
@@ -14,7 +13,7 @@ var firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID
 }
 
-var fb = firebase.initializeApp(firebaseConfig);
+var fb = admin.initializeApp(firebaseConfig);
 
 const new_connect = {
   user: process.env.PGCONNECT_USER,

@@ -1,8 +1,0 @@
-endpoint: https://qbe1-c802843c00.herokuapp.com/database/dev
-datamodel: datamodel.prisma
-
-hooks:
-  post-deploy:
-    - graphql get-schema --project database
-
-secret: ${env:PRISMA_SECRET}

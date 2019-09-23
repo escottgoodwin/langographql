@@ -1,9 +1,9 @@
 require('dotenv').config()
+let utilFile = require ('./utils')
+const functions = require('firebase-functions');
 const { GraphQLServer } = require('graphql-yoga')
 const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutation')
-let utilFile = require ('./utils')
-
 const Pool = require('pg').Pool
 
 const port = 3000
@@ -25,7 +25,7 @@ const resolvers = {
 }
 
 const server = new GraphQLServer({
-  typeDefs: './src/schema.graphql',
+  typeDefs: './schema.graphql',
   resolvers,
   context: async req => {
     const user = await utilFile.getUser(req) 
@@ -34,5 +34,13 @@ const server = new GraphQLServer({
 
 })
 
-server.start(() => console.log('Server is running on http://localhost:4000'))
-
+const options = {
+    cors: true
+  };
+  
+  server.createHttpServer(options);
+  const express = server.express;
+  
+  module.exports = {
+    api: functions.https.onRequest(express),
+  };

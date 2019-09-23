@@ -6,8 +6,6 @@ let utilFile = require ('./utils')
 
 const Pool = require('pg').Pool
 
-const port = 3000
-
 const new_connect = {
   user: process.env.PGCONNECT_USER,
   host: process.env.PGCONNECT_HOST,

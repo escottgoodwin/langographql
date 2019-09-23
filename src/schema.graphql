@@ -10,7 +10,7 @@ type Query {
 
 type Mutation {
 
-  signup(uid:String!, name: String!, email: String!, nativeLang: String!): Message
+  signup(password: String!, name: String!, email: String!, nativeLang: String!): Message
 
   login: Message
 

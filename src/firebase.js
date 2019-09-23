@@ -1,8 +1,4 @@
-import * as firebase from "firebase/app";
-import 'firebase/firestore'
-import 'firebase/messaging'
-import 'firebase/storage'
-import 'firebase/auth'
+var admin = require("firebase-admin");
 
 var firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -14,7 +10,6 @@ var firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID
 };
 
-var fire = firebase.initializeApp(firebaseConfig);
+const fb = admin.initializeApp(firebaseConfig);
 
-
-export default fire
+module.exports =  { fb }

@@ -3,6 +3,7 @@ const { GraphQLServer } = require('graphql-yoga')
 const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutation')
 let utilFile = require ('./utils')
+const { fb } = require('./firebase');
 
 const Pool = require('pg').Pool
 
@@ -27,7 +28,7 @@ const server = new GraphQLServer({
   resolvers,
   context: async req => {
     const user = await utilFile.getUser(req) 
-    return { db, user  }
+    return { db, user, fb  }
   },
 
 })

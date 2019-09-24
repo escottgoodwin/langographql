@@ -3,7 +3,7 @@ var admin = require("firebase-admin");
 var serviceAccount = require("./langolearn-firebase-adminsdk-8fhik-a01893949a.json");
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.applicationDefault(),
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
   databaseURL: process.env.FIREBASE_DATABASE_URL,

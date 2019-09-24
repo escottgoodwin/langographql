@@ -1,28 +1,27 @@
+const { admin } = require('../firebase');
+
 async function signup(parent, args, context, info) {
-  const { db, fb } = context
+  const { db } = context
   const { email, password, name, nativeLang } = args
   const signUpDate = new Date()
-
-  fb.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
     
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    return { message:'Error signing up!' }
-  })
-  var user = firebase.auth().currentUser;
-  const insertText = 'INSERT INTO users(uid, email, name, native_lang, created_at,last_seen) VALUES ($1, $2, $3, $4, $5, $6)'
-  const { rows } = await db.query(insertText, [user.uid, email, name, nativeLang, signUpDate, signUpDate])
+  admin.auth().createUser({
+      email: email,
+      emailVerified: false,
+      password: password,
+      displayName: name,
+    })
+    .then(function(userRecord) {
+        // See the UserRecord reference doc for the contents of userRecord.
+        console.log('Successfully created new user:', userRecord.uid);
+        const insertText = 'INSERT INTO users(uid, email, name, native_lang, created_at,last_seen) VALUES ($1, $2, $3, $4, $5, $6)'
+        const { rows } = db.query(insertText, [userRecord.uid, email, name, nativeLang, signUpDate, signUpDate])
 
-  user.sendEmailVerification().then(function() {
-    // Email sent.
-  }).catch(function(error) {
-    return { message:'Error signing up!' }
-  });
-  fb.auth().signOut().then(function() {
-    // Sign-out successful.
-  }).catch(function(error) {
-    // An error happened.
-  });
+      })
+      .catch(function(error) {
+        console.log('Error creating new user:', error);
+      })
+
   return { message:'User Added!' }
 }
 

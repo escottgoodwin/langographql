@@ -1,6 +1,6 @@
 var admin = require("firebase-admin");
 
-var serviceAccount = require("langolearn-firebase-adminsdk-8fhik-a01893949a.json");
+var serviceAccount = require("./src/langolearn-firebase-adminsdk-8fhik-a01893949a.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

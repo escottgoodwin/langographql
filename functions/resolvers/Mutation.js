@@ -1,4 +1,3 @@
-const { admin } = require('../firebase');
 const fetch = require('node-fetch');
 
 async function singleLinkRecommendations(parent, args, ctx, info) {
@@ -30,27 +29,12 @@ async function singleLinkRecommendations(parent, args, ctx, info) {
 
 async function signup(parent, args, context, info) {
   const { db } = context
-  const { email, password, name, nativeLang } = args
+  const { uid, email, name, nativeLang } = args
   const signUpDate = new Date()
-    
-  admin.auth().createUser({
-      email: email,
-      emailVerified: false,
-      password: password,
-      displayName: name,
-    })
-    .then(userRecord => {
-        // See the UserRecord reference doc for the contents of userRecord.
-        console.log('Successfully created new user:', userRecord.uid);
-        const insertText = 'INSERT INTO users(uid, email, name, native_lang, created_at,last_seen) VALUES ($1, $2, $3, $4, $5, $6)'
-        const { rows } = db.query(insertText, [userRecord.uid, email, name, nativeLang, signUpDate, signUpDate])
-        return userRecord
-      })
-      .catch((error) => {
-        console.log('Error creating new user:', error);
-      })
-
-  return { message:'User Added!' }
+  
+  const insertText = 'INSERT INTO users(uid, email, name, native_lang, created_at,last_seen) VALUES ($1, $2, $3, $4, $5, $6)'
+  const { rows } = db.query(insertText, [uid, email, name, nativeLang, signUpDate, signUpDate])
+  return { message: 'User added!'}
 }
 
 async function log(parent, args, context, info) {

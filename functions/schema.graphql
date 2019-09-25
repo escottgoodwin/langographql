@@ -10,7 +10,7 @@ type Mutation {
 
   singleLinkRecommendations(transLang: String!, link: String!): ArticleRecommendations!
 
-  signup(password: String!, name: String!, email: String!, nativeLang: String!): Message
+  signup(uid: String!, password: String!, name: String!, email: String!, nativeLang: String!): Message
 
   login: Message
 

@@ -1,19 +1,18 @@
 require('dotenv').config()
-let utilFile = require ('./utils')
-const functions = require('firebase-functions');
 const { GraphQLServer } = require('graphql-yoga')
 const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutation')
+let utilFile = require ('./utils')
+const functions = require('firebase-functions');
+
 const Pool = require('pg').Pool
 
-const port = 3000
-
 const new_connect = {
-  user: process.env.PGCONNECT_USER,
-  host: process.env.PGCONNECT_HOST,
-  database: process.env.PGCONNECT_DBNAME,
-  password: process.env.PGCONNECT_PASSWORD,
-  port: process.env.PGCONNECT_PORT,
+  user: 'doadmin',
+  host: 'db-postgresql-nyc1-63665-do-user-6544825-0.db.ondigitalocean.com',
+  database: 'langolearn',
+  password: 'xis9craq0bu8ps1k',
+  port: '25060',
   ssl: true
 }
  
@@ -35,12 +34,12 @@ const server = new GraphQLServer({
 })
 
 const options = {
-    cors: true
-  };
-  
-  server.createHttpServer(options);
-  const express = server.express;
-  
-  module.exports = {
-    api: functions.https.onRequest(express),
-  };
+  cors: true
+};
+
+server.createHttpServer(options);
+const express = server.express;
+
+module.exports = {
+  lrec: functions.https.onRequest(express),
+};

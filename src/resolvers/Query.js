@@ -1,33 +1,3 @@
-const fetch = require('node-fetch');
-
-async function singleLinkRecommendations(parent, args, ctx, info) {
-  const { link, transLang } = args
-  const gapi = process.env.GOOG_FUNC_REC
-
-  const searchData = {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, cors, *same-origin
-      headers: {
-        "Content-Type": "application/json",
-          // "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: JSON.stringify({"link":link}) // body data type must match "Content-Type" header
-  }
-
-  const apiurl = `https://lango-rec-${transLang}-${gapi}`
-
-    let response = await fetch(apiurl,searchData);
-    let data = await response.json();
-    let { recs, title, langt } = data
-    return {
-      recommendations: recs,
-      link,
-      title,
-      langt
-    }
-  }
-
-
 async function articleRecommendations(parent, args, context, info) {
   const { db, user } = context
   const { lang } = args
@@ -57,7 +27,6 @@ async function article(parent, args, context, info) {
 
 
 module.exports = {
-  singleLinkRecommendations,
   articleRecommendations,
   article
 }

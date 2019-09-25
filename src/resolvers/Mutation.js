@@ -1,4 +1,32 @@
 const { admin } = require('../firebase');
+const fetch = require('node-fetch');
+
+async function singleLinkRecommendations(parent, args, ctx, info) {
+  const { link, transLang } = args
+  const gapi = process.env.GOOG_FUNC_REC
+
+  const searchData = {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, cors, *same-origin
+      headers: {
+        "Content-Type": "application/json",
+          // "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: JSON.stringify({"link":link}) // body data type must match "Content-Type" header
+  }
+
+  const apiurl = `https://lango-rec-${transLang}-v26nfpfxqq-uc.a.run.app/apis/single_art`
+
+    let response = await fetch(apiurl,searchData);
+    let data = await response.json();
+    let { recs, title, langt } = data
+    return {
+      recommendations: recs,
+      link,
+      title,
+      langt
+    }
+  }
 
 async function signup(parent, args, context, info) {
   const { db } = context
@@ -11,14 +39,14 @@ async function signup(parent, args, context, info) {
       password: password,
       displayName: name,
     })
-    .then(function(userRecord) {
+    .then(userRecord => {
         // See the UserRecord reference doc for the contents of userRecord.
         console.log('Successfully created new user:', userRecord.uid);
         const insertText = 'INSERT INTO users(uid, email, name, native_lang, created_at,last_seen) VALUES ($1, $2, $3, $4, $5, $6)'
         const { rows } = db.query(insertText, [userRecord.uid, email, name, nativeLang, signUpDate, signUpDate])
-
+        return userRecord
       })
-      .catch(function(error) {
+      .catch((error) => {
         console.log('Error creating new user:', error);
       })
 
@@ -68,6 +96,7 @@ async function updateUser(parent, args, context, info) {
 }
 
 module.exports = {
+  singleLinkRecommendations,
   signup,
   login,
   logout,

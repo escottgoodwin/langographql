@@ -1,7 +1,5 @@
 type Query {
 
-  singleLinkRecommendations(transLang: String!, link: String!): ArticleRecommendations!
-
   articleRecommendations: [ArticleRecommendation!]!
 
   article(artId: String!,lang: String!): Article
@@ -9,6 +7,8 @@ type Query {
 }
 
 type Mutation {
+
+  singleLinkRecommendations(transLang: String!, link: String!): ArticleRecommendations!
 
   signup(password: String!, name: String!, email: String!, nativeLang: String!): Message
 

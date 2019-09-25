@@ -47,6 +47,7 @@ type ArticleRecommendation {
   link: String!
   title: String!
   art_id: String!
+  lang: String!
 }
 
 type ArticleRecommendations {

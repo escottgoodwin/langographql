@@ -19,15 +19,17 @@ async function singleLinkRecommendations(parent, args, context, info) {
     const { user, db } = context
     const insertText = 'INSERT INTO linksearch(uid, link, date) VALUES ($1, $2, $3)'
     const { rows } = db.query(insertText, [user.uid, link, now])
-
+  
     let response = await fetch(apiurl,searchData);
     let data = await response.json();
     let { recs, title, langt } = data
+    const recommendations = recs.map(r => ({art_id: r.art_id, title: r.title, link: r.link, lang: transLang}))
+    console.log(recommendations)
     return {
-      recommendations: recs,
+      recommendations,
       link,
       title,
-      langt
+      langt,
     }
   }
 

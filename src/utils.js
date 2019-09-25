@@ -1,4 +1,5 @@
 require('dotenv').config();
+const jwt = require('jsonwebtoken')
 
 const Pool = require('pg').Pool
 

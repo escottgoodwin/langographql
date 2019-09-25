@@ -1,6 +1,6 @@
 type Query {
 
-  articleRecommendations: [ArticleRecommendation!]!
+  articleRecommendations(lang: String!): [ArticleRecommendation!]!
 
   article(artId: String!,lang: String!): Article
   

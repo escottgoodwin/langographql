@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const jwt = require('jsonwebtoken');
 
 async function singleLinkRecommendations(parent, args, context, info) {
   const { link, transLang } = args
@@ -63,11 +64,15 @@ async function log(parent, args, context, info) {
 
 async function login(parent, args, context, info) {
   const { db, user } = context
-  const { uid } = user 
+  const { uid } = args
   const now = new Date()
   const sql = `UPDATE users SET online = 'yes',last_seen = $1 WHERE uid = $2`
   const { rows } = await db.query(sql,[now, uid])
-  return { message: 'Online now' }
+
+  return { 
+    message: 'Online now',
+    token: jwt.sign({ uid }, process.env.APP_SECRET),
+  }
   
 }
 

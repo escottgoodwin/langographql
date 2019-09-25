@@ -12,9 +12,9 @@ type Mutation {
 
   signup(uid: String!, password: String!, name: String!, email: String!, nativeLang: String!): Message
 
-  login: Message
+  login(uid: String!): Auth!
 
-  logout: Message
+  logout(uid: String!): Message
 
   log(bool:String!): Message
 
@@ -29,6 +29,11 @@ type User {
 
 type Message {
   message: String
+}
+
+type Auth {
+  message: String!,
+  token: String!
 }
 
 type Article {

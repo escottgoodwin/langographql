@@ -1,4 +1,3 @@
-const { admin } = require('../firebase');
 const fetch = require('node-fetch');
 
 async function singleLinkRecommendations(parent, args, ctx, info) {
@@ -75,7 +74,6 @@ async function logout(parent, args, context, info) {
   const sql = `UPDATE users SET online = 'no' WHERE uid = '${uid}'`
   const { rows } = await db.query(sql)
   return { message: 'Offline now' }
-  
 }
 
 async function updateUser(parent, args, context, info) {

@@ -3,7 +3,6 @@ const { GraphQLServer } = require('graphql-yoga')
 const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutation')
 let utilFile = require ('./utils')
-const { admin } = require('./firebase');
 
 const Pool = require('pg').Pool
 

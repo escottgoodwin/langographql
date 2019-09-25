@@ -8,7 +8,7 @@ async function articleRecommendations(parent, args, context, info) {
   query2 = `select art_ids from recommendations where uid = '${user.uid}' AND lang = '${lang}' ORDER BY rec_date DESC LIMIT 1`
   const results = await db.query(query2)
   const art_ids = results.rows
-  console.log(art_ids)
+
   query1 = `select * from ${lang}_arts where uid in ${art_ids}`
   
   query3 = `select * from ${lang}_arts where uid in (SELECT uid FROM recommendations WHERE uid like ${user.uid})`

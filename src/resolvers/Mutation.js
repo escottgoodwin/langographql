@@ -17,7 +17,7 @@ async function singleLinkRecommendations(parent, args, context, info) {
     const now = new Date()
     const apiurl = `https://lango-rec-${transLang}-v26nfpfxqq-uc.a.run.app/apis/single_art`
     const { user, db } = context
-    const insertText = 'INSERT INTO linksearch(uid, link, date) VALUES ($1, $2)'
+    const insertText = 'INSERT INTO linksearch(uid, link, date) VALUES ($1, $2, $3)'
     const { rows } = db.query(insertText, [user.uid, link, now])
 
     let response = await fetch(apiurl,searchData);

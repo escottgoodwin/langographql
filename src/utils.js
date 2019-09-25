@@ -19,7 +19,6 @@ async function getUser(ctx) {
   if (Authorization) {
     const token = Authorization.replace('Bearer ', '')
     const uid = jwt.verify(token, process.env.APP_SECRET)
-    console.log(uid)
     query2 = `select * from users where uid = '${uid}'`
     const results = await db.query(query2)
     const user = results.rows[0]

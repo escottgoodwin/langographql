@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-async function singleLinkRecommendations(parent, args, ctx, info) {
+async function singleLinkRecommendations(parent, args, context, info) {
   const { link, transLang } = args
   const gapi = process.env.GOOG_FUNC_REC
 
@@ -13,8 +13,11 @@ async function singleLinkRecommendations(parent, args, ctx, info) {
       },
       body: JSON.stringify({"link":link}) // body data type must match "Content-Type" header
   }
-
-  const apiurl = `https://lango-rec-${transLang}-v26nfpfxqq-uc.a.run.app/apis/single_art`
+    const now = new Date()
+    const apiurl = `https://lango-rec-${transLang}-v26nfpfxqq-uc.a.run.app/apis/single_art`
+    const {user} = context
+    const insertText = 'INSERT INTO linksearch(uid, link, date) VALUES ($1, $2)'
+    const { rows } = db.query(insertText, [user.uid, link, now])
 
     let response = await fetch(apiurl,searchData);
     let data = await response.json();

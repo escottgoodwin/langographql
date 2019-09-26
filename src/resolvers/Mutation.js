@@ -8,7 +8,11 @@ async function singleLinkRecommendations(parent, args, context, info) {
   if (transLang.length===0){
     throw new Error('Please select a language.')
   }
-  
+
+  if (link.replace(/(^\s+|\s+$)/g,'').length===0){
+    throw new Error('Please submit a link.')
+  }
+
   const searchData = {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       mode: "cors", // no-cors, cors, *same-origin

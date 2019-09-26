@@ -5,12 +5,15 @@ async function singleLinkRecommendations(parent, args, context, info) {
   const { link, transLang } = args
   const gapi = process.env.GOOG_FUNC_REC
 
+  if (transLang.length===0){
+    throw new Error('Please select a language.')
+  }
+  
   const searchData = {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       mode: "cors", // no-cors, cors, *same-origin
       headers: {
         "Content-Type": "application/json",
-          // "Content-Type": "application/x-www-form-urlencoded",
       },
       body: JSON.stringify({"link":link}) // body data type must match "Content-Type" header
   }
@@ -24,7 +27,7 @@ async function singleLinkRecommendations(parent, args, context, info) {
     let data = await response.json();
     let { recs, title, langt } = data
     const recommendations = recs.map(r => ({art_id: r.art_id, title: r.title, link: r.link, lang: transLang}))
-    console.log(recommendations)
+  
     return {
       recommendations,
       link,

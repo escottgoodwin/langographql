@@ -24,15 +24,35 @@ async function articleRecommendations(parent, args, context, info) {
 
 async function article(parent, args, context, info) {
   const { lang, artId } = args
-  const { db } = context
+  const { db, user } = context
   query2 = `select * from ${lang}_arts where art_id = '${artId}'`
   const results = await db.query(query2)
-  return results.rows[0]
+
+  querytrans = `select * from user_translations where art_id = '${artId}' AND uid ='${user.uid}'`
+  const results1 = await db.query(querytrans)
+  const { link, title, art_id, article } = results.rows[0]
+
+  return {
+    link,
+    title,
+    art_id,
+    article,
+    translations: results1.rows
+    }
   
 }
 
+async function translations(parent, args, context, info) {
+  const { db, user } = context
+  querytrans = `select * from user_translations where uid ='${user.uid}'`
+  const results = await db.query(querytrans)
+  const translations = results.rows
+  return translations
+  
+}
 
 module.exports = {
   articleRecommendations,
-  article
+  article,
+  translations
 }

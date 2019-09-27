@@ -3,6 +3,8 @@ type Query {
   articleRecommendations(lang: String!): [ArticleRecommendation!]!
 
   article(artId: String!,lang: String!): Article
+
+  translations: [Translation!]!
   
 }
 
@@ -16,9 +18,9 @@ type Mutation {
 
   logout(uid: String!): Message
 
-  log(bool:String!): Message
-
   updateUser(name: String, nativeLang: String): Message
+
+  translation(lang: String, orginalText: String, artId: String): Translation!
 
 }
 
@@ -41,6 +43,7 @@ type Article {
   title: String!
   art_id: String!
   article: String!
+  translations: [Translation!]!
 }
 
 type ArticleRecommendation {
@@ -56,4 +59,12 @@ type ArticleRecommendations {
   trans_lang: String!
   langt: String!
   recommendations: [ArticleRecommendation!]!
+}
+
+type Translation {
+  orig_text: String! 
+  trans_text: String! 
+  art_id: String! 
+  id: String!,
+  uid: String!
 }

@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const jwt = require('jsonwebtoken');
+const translate = require('translate-google')
 
 async function singleLinkRecommendations(parent, args, context, info) {
   const { link, transLang } = args
@@ -60,17 +61,6 @@ async function singleLinkRecommendations(parent, args, context, info) {
     
   }
   
-
-async function log(parent, args, context, info) {
-  const { db, user } = context
-  const { uid } = user 
-  const { bool } = args
-  const sql = `UPDATE users SET online = '${bool}' WHERE uid = '${uid}'`
-  const { rows } = await db.query(sql)
-  return { message: args.bool==='yes' ? 'Online now' : 'Offline now' }
-  
-}
-
 async function login(parent, args, context, info) {
   const { db, user } = context
   const { uid } = args
@@ -106,11 +96,28 @@ async function updateUser(parent, args, context, info) {
 
 }
 
+async function translation(parent, args, context, info) {
+  const { lang, orginalText, artId } = args
+  const { db, user } = context
+  const { uid } = user
+  const transText = await translate(orginalText, { from: lang, to: user.native_lang });
+  const insertTrans = 'INSERT INTO user_translations(uid, art_id, orig_text, trans_text) VALUES ($1, $2, $3, $4)'
+  const { rows } = await db.query(insertTrans, [uid, artId, orginalText, transText])
+
+  return { 
+    orig_text: orginalText, 
+    trans_text: transText, 
+    art_id: artId, 
+    id:'', 
+    uid
+  }
+}
+
 module.exports = {
   singleLinkRecommendations,
   signup,
   login,
   logout,
-  log,
   updateUser,
+  translation
 }

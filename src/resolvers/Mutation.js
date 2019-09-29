@@ -65,9 +65,17 @@ async function singleLinkRecommendations(parent, args, context, info) {
 async function login(parent, args, context, info) {
   const { db, user } = context
   const { uid } = args
+
+  const sql1 = `SELECT * FROM users WHERE uid = $1`
+  const results = await db.query(sql1,[uid])
+  console.log()
+  if (results.rows.length===0){
+    throw new Error('No user. Please sign up.')
+  }
+
   const now = new Date()
-  const sql = `UPDATE users SET online = 'yes',last_seen = $1 WHERE uid = $2`
-  const { rows } = await db.query(sql,[now, uid])
+  const sql2 = `UPDATE users SET online = 'yes',last_seen = $1 WHERE uid = $2`
+  const { rows } = await db.query(sql2,[now, uid])
 
   return { 
     message: 'Online now',

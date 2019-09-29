@@ -30,13 +30,14 @@ async function article(parent, args, context, info) {
 
   querytrans = `select * from user_translations where art_id = '${artId}' AND uid ='${user.uid}'`
   const results1 = await db.query(querytrans)
-  const { link, title, art_id, article } = results.rows[0]
+  const { link, title, art_id, article, dt } = results.rows[0]
 
   return {
     link,
     title,
     art_id,
     article,
+    date: dt,
     translations: results1.rows
     }
   

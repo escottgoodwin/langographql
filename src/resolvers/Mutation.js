@@ -31,7 +31,8 @@ async function singleLinkRecommendations(parent, args, context, info) {
     let response = await fetch(apiurl,searchData);
     let data = await response.json();
     let { recs, title, langt } = data
-    const recommendations = recs.map(r => ({art_id: r.art_id, title: r.title, link: r.link, lang: transLang}))
+
+    const recommendations = recs.map(r => ({art_id: r.art_id, title: r.title, link: r.link, lang: transLang, date: r.dt}))
   
     return {
       recommendations,

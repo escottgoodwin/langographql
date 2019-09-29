@@ -1,5 +1,11 @@
 require('dotenv').config()
 const { GraphQLServer } = require('graphql-yoga')
+
+const {
+  GraphQLDate,
+  GraphQLDateTime
+} = require('graphql-iso-date')
+
 const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutation')
 let utilFile = require ('./utils')
@@ -18,6 +24,8 @@ const new_connect = {
 const db = new Pool(new_connect)
 
 const resolvers = {
+  Date: GraphQLDate,
+  DateTime: GraphQLDateTime,
   Query,
   Mutation
 }

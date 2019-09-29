@@ -1,3 +1,6 @@
+scalar Date
+scalar DateTime
+
 type Query {
 
   articleRecommendations(lang: String!): [ArticleRecommendation!]!
@@ -43,6 +46,7 @@ type Article {
   title: String!
   art_id: String!
   article: String!
+  date: DateTime!
   translations: [Translation!]!
 }
 
@@ -51,6 +55,7 @@ type ArticleRecommendation {
   title: String!
   art_id: String!
   lang: String!
+  date: DateTime
 }
 
 type ArticleRecommendations {

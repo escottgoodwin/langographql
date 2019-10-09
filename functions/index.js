@@ -41,5 +41,5 @@ server.createHttpServer(options);
 const express = server.express;
 
 module.exports = {
-  lrec: functions.https.onRequest(express),
+  api: functions.https.onRequest(express),
 };

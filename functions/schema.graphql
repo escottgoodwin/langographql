@@ -1,8 +1,13 @@
+scalar Date
+scalar DateTime
+
 type Query {
 
-  articleRecommendations: [ArticleRecommendation!]!
+  articleRecommendations(lang: String!): [ArticleRecommendation!]!
 
   article(artId: String!,lang: String!): Article
+
+  translations: [Translation!]!
   
 }
 
@@ -12,13 +17,13 @@ type Mutation {
 
   signup(uid: String!, password: String!, name: String!, email: String!, nativeLang: String!): Message
 
-  login: Message
+  login(uid: String!): Auth!
 
-  logout: Message
-
-  log(bool:String!): Message
+  logout(uid: String!): Message
 
   updateUser(name: String, nativeLang: String): Message
+
+  translation(lang: String, orginalText: String, artId: String): Translation!
 
 }
 
@@ -31,17 +36,26 @@ type Message {
   message: String
 }
 
+type Auth {
+  message: String!,
+  token: String!
+}
+
 type Article {
   link: String!
   title: String!
   art_id: String!
   article: String!
+  date: DateTime!
+  translations: [Translation!]!
 }
 
 type ArticleRecommendation {
   link: String!
   title: String!
   art_id: String!
+  lang: String!
+  date: DateTime
 }
 
 type ArticleRecommendations {
@@ -50,4 +64,12 @@ type ArticleRecommendations {
   trans_lang: String!
   langt: String!
   recommendations: [ArticleRecommendation!]!
+}
+
+type Translation {
+  orig_text: String! 
+  trans_text: String! 
+  art_id: String! 
+  id: String!,
+  uid: String!
 }

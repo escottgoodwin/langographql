@@ -1,4 +1,5 @@
 require('dotenv').config();
+const jwt = require('jsonwebtoken')
 
 const Pool = require('pg').Pool
 
@@ -17,7 +18,7 @@ async function getUser(ctx) {
   const Authorization = (ctx.req || ctx.request).get('Authorization')
   if (Authorization) {
     const token = Authorization.replace('Bearer ', '')
-    const uid = jwt.verify(token, process.env.APP_SECRET)
+    const {uid} = jwt.verify(token, process.env.APP_SECRET)
     query2 = `select * from users where uid = '${uid}'`
     const results = await db.query(query2)
     const user = results.rows[0]

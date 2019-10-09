@@ -23,7 +23,7 @@ async function singleLinkRecommendations(parent, args, context, info) {
       body: JSON.stringify({"link":link}) // body data type must match "Content-Type" header
   }
     const now = new Date()
-    const apiurl = `https://lango-rec-${transLang}-v26nfpfxqq-uc.a.run.app/apis/single_art`
+    const apiurl = `https://lango-rec-${transLang}-v26nfpfxqq-uc.a.run.app/apis/link_search`
     const { user, db } = context
     const insertText = 'INSERT INTO linksearch(uid, link, date) VALUES ($1, $2, $3)'
     const { rows } = db.query(insertText, [user.uid, link, now])

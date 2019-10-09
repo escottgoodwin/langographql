@@ -8,11 +8,11 @@ const functions = require('firebase-functions');
 const Pool = require('pg').Pool
 
 const new_connect = {
-  user: 'doadmin',
-  host: 'db-postgresql-nyc1-63665-do-user-6544825-0.db.ondigitalocean.com',
-  database: 'langolearn',
-  password: 'xis9craq0bu8ps1k',
-  port: '25060',
+  user: process.env.PGCONNECT_USER,
+  host: process.env.PGCONNECT_HOST,
+  database: process.env.PGCONNECT_DBNAME,
+  password: process.env.PGCONNECT_PASSWORD,
+  port: process.env.PGCONNECT_PORT,
   ssl: true
 }
  

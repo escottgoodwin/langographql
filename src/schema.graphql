@@ -5,7 +5,7 @@ type Query {
 
   articleRecommendations(lang: String!): [ClusterRecommendations!]!
 
-  articleRecommendations1(lang: String!): [ClusterRecommendation!]!
+  articleRecommendationsAll(lang: String!): [ClusterRecommendation!]!
 
   article(artId: String!,lang: String!): Article
 

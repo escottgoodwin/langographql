@@ -3,7 +3,7 @@ scalar DateTime
 
 type Query {
 
-  articleRecommendations(lang: String!): [ArticleRecommendation!]!
+  articleRecommendations(lang: String!): [ClusterRecommendations!]!
 
   article(artId: String!,lang: String!): Article
 
@@ -72,4 +72,16 @@ type Translation {
   art_id: String! 
   id: String!,
   uid: String!
+}
+
+type ClusterRecommendation {
+  art_id: String!
+  link: String!
+  title: String!
+  lang: String!
+  date: DateTime!
+}
+
+type ClusterRecommendations {
+  recs: [ClusterRecommendation!]!
 }

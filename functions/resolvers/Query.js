@@ -1,15 +1,3 @@
-async function getCluster(db, lang, uid, cluster_num){
-  query = `SELECT art_id, link, title, dt FROM ${lang}_arts
-  WHERE art_id in
-  (SELECT art_id FROM recommendations
-  WHERE uid='${uid}' AND cluster_num=${cluster_num})`
-
-  const results = await db.query(query)
-  const recommendations = results.rows.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.dt}))
-
-  return recommendations
-}
-
 async function getRecs(db, lang, art_ids){
 
   query = `SELECT art_id, link, title, dt FROM ${lang}_arts WHERE art_id = ANY($1)`
@@ -58,26 +46,6 @@ async function articleRecommendations(parent, args, context, info) {
   return clusterRecs
 }
 
-async function articleRecommendations1(parent, args, context, info) {
-  const { db, user } = context
-  const { uid } = user
-
-  const { lang } = args
-  if (!user){
-    throw error
-  }
-  query = `SELECT art_id, link, title, dt FROM ${lang}_arts
-  WHERE art_id in
-  (SELECT art_id FROM recommendations
-  WHERE uid='${uid}')`
-
-  const results = await db.query(query)
-  const recommendations = results.rows.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.dt}))
-
-  return recommendations
-
-}
-
 async function article(parent, args, context, info) {
   const { lang, artId } = args
   const { db, user } = context
@@ -110,7 +78,6 @@ async function translations(parent, args, context, info) {
 
 module.exports = {
   articleRecommendations,
-  articleRecommendations1,
   article,
   translations
 }

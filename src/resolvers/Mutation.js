@@ -69,7 +69,7 @@ async function login(parent, args, context, info) {
 
   const sql1 = `SELECT * FROM users WHERE uid = $1`
   const results = await db.query(sql1,[uid])
-  console.log()
+
   if (results.rows.length===0){
     throw new Error('No user. Please sign up.')
   }
@@ -77,10 +77,12 @@ async function login(parent, args, context, info) {
   const now = new Date()
   const sql2 = `UPDATE users SET online = 'yes',last_seen = $1 WHERE uid = $2`
   const { rows } = await db.query(sql2,[now, uid])
-
+  const user1 = results.rows[0]
+  console.log(user1)
   return { 
     message: 'Online now',
     token: jwt.sign({ uid }, process.env.APP_SECRET),
+    user:user1
   }
   
 }

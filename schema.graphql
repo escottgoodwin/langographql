@@ -50,8 +50,9 @@ type Message {
 }
 
 type Auth {
-  message: String!,
+  message: String!
   token: String!
+  user: User!
 }
 
 type Article {

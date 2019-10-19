@@ -63,27 +63,29 @@ async function singleLinkRecommendations(parent, args, context, info) {
     return { message: 'User added!'}
   }
   
-async function login(parent, args, context, info) {
-  const { db, user } = context
-  const { uid } = args
-
-  const sql1 = `SELECT * FROM users WHERE uid = $1`
-  const results = await db.query(sql1,[uid])
-  console.log()
-  if (results.rows.length===0){
-    throw new Error('No user. Please sign up.')
-  }
-
-  const now = new Date()
-  const sql2 = `UPDATE users SET online = 'yes',last_seen = $1 WHERE uid = $2`
-  const { rows } = await db.query(sql2,[now, uid])
-
-  return { 
-    message: 'Online now',
-    token: jwt.sign({ uid }, process.env.APP_SECRET),
-  }
+  async function login(parent, args, context, info) {
+    const { db, user } = context
+    const { uid } = args
   
-}
+    const sql1 = `SELECT * FROM users WHERE uid = $1`
+    const results = await db.query(sql1,[uid])
+  
+    if (results.rows.length===0){
+      throw new Error('No user. Please sign up.')
+    }
+  
+    const now = new Date()
+    const sql2 = `UPDATE users SET online = 'yes',last_seen = $1 WHERE uid = $2`
+    const { rows } = await db.query(sql2,[now, uid])
+    const user1 = results.rows[0]
+    console.log(user1)
+    return { 
+      message: 'Online now',
+      token: jwt.sign({ uid }, process.env.APP_SECRET),
+      user:user1
+    }
+    
+  }
 
 async function logout(parent, args, context, info) {
   const { db, user } = context

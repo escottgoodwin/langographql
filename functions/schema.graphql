@@ -5,9 +5,13 @@ type Query {
 
   articleRecommendations(lang: String!): [ClusterRecommendations!]!
 
+  articleRecommendationsAll(lang: String!): [ClusterRecommendation!]!
+
   article(artId: String!,lang: String!): Article
 
   translations: [Translation!]!
+
+  user: User!
   
 }
 
@@ -21,7 +25,9 @@ type Mutation {
 
   logout(uid: String!): Message
 
-  updateUser(name: String, nativeLang: String): Message
+  updateUser(email: String, name: String, native_lang: String, en_rec: Boolean, es_rec: Boolean, fr_rec: Boolean, de_rec: Boolean): Message
+
+  updateLangs(en_rec: Boolean, es_rec: Boolean, fr_rec: Boolean, de_rec: Boolean): Message
 
   translation(lang: String, orginalText: String, artId: String): Translation!
 
@@ -29,7 +35,14 @@ type Mutation {
 
 type User {
   name: String
-  nativeLang: String
+  native_lang: String
+  email: String 
+  uid: String 
+  en_rec: Boolean
+  fr_rec: Boolean
+  es_rec: Boolean
+  de_rec: Boolean
+  created_at: DateTime
 }
 
 type Message {
@@ -85,3 +98,5 @@ type ClusterRecommendation {
 type ClusterRecommendations {
   recs: [ClusterRecommendation!]!
 }
+
+

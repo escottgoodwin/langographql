@@ -1,6 +1,12 @@
 const fetch = require('node-fetch');
 const jwt = require('jsonwebtoken');
 const translate = require('translate-google')
+var admin = require('firebase-admin');
+
+admin.initializeApp({
+  credential: admin.credential.applicationDefault(),
+  databaseURL: "https://langolearn.firebaseio.com"
+});
 
 async function singleLinkRecommendations(parent, args, context, info) {
   const { link, transLang } = args
@@ -45,21 +51,16 @@ async function singleLinkRecommendations(parent, args, context, info) {
   async function signup(parent, args, context, info) {
     const { db } = context
     const { uid, email, name, nativeLang } = args
+    const en_rec = false
+    const es_rec = false
+    const de_rec = false
+    const fr_rec = false
+
     const signUpDate = new Date()
     
-    const insertText = 'INSERT INTO users(uid, email, name, native_lang, created_at,last_seen) VALUES ($1, $2, $3, $4, $5, $6)'
-    const { rows } = db.query(insertText, [uid, email, name, nativeLang, signUpDate, signUpDate])
+    const insertText = 'INSERT INTO users(uid, email, name, native_lang, created_at,last_seen, en_rec, es_rec, de_rec, fr_rec) VALUES ($1, $2, $3, $4, $5, $6, $7, 8, $9, $10)'
+    const { rows } = db.query(insertText, [uid, email, name, nativeLang, signUpDate, signUpDate, en_rec, es_rec, de_rec, fr_rec])
     return { message: 'User added!'}
-  }
-  
-  async function log(parent, args, context, info) {
-    const { db, user } = context
-    const { uid } = user 
-    const { bool } = args
-    const sql = `UPDATE users SET online = '${bool}' WHERE uid = '${uid}'`
-    const { rows } = await db.query(sql)
-    return { message: args.bool==='yes' ? 'Online now' : 'Offline now' }
-    
   }
   
 async function login(parent, args, context, info) {
@@ -96,12 +97,35 @@ async function updateUser(parent, args, context, info) {
 
   const { db, user } = context
   const { uid } = user
-  const { name, nativeLang } = args
+  const { email, name, native_lang } = args
 
-  const sql = `UPDATE users SET name = '${name}', native_lang = '${nativeLang}' WHERE uid = '${uid}'`
+  const user1 = admin.auth().updateUser(uid, {
+    email: email,
+  })
+    .then(userRecord =>  {
+      return userRecord
+    })
+    .catch(error => {
+      return error.message
+    });
+
+  const sql = `UPDATE users SET email = '${email}', name = '${name}', native_lang = '${native_lang}' WHERE uid = '${uid}'`
   const { rows } = await db.query(sql)
 
+
   return { message:'User updated' }
+
+}
+
+async function updateLangs(parent, args, context, info) {
+
+  const { db, user } = context
+  const { uid } = user
+  const { es_rec, fr_rec, en_rec, de_rec } = args
+  const sql = `UPDATE users SET en_rec=$1, de_rec=$2, es_rec=$3, fr_rec=$4 WHERE uid = '${uid}'`
+  const data =  [en_rec, de_rec, es_rec, fr_rec]
+  const { rows } = await db.query(sql,data)
+  return { message:'Languages updated' }
 
 }
 
@@ -128,5 +152,6 @@ module.exports = {
   login,
   logout,
   updateUser,
+  updateLangs,
   translation
 }

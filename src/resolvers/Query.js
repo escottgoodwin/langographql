@@ -96,9 +96,18 @@ async function translations(parent, args, context, info) {
   
 }
 
+async function user(parent, args, context, info) {
+  const { db, user } = context
+  const { name, email, uid, en_rec, fr_rec, es_rec, de_rec, native_lang, created_at } = user
+
+  return { name, email, uid, en_rec, fr_rec, es_rec, de_rec, native_lang, created_at }
+  
+}
+
 module.exports = {
   articleRecommendations,
   articleRecommendationsAll,
   article,
-  translations
+  translations,
+  user
 }

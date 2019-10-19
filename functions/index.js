@@ -29,8 +29,8 @@ const server = new GraphQLServer({
   context: async req => {
     const user = await utilFile.getUser(req) 
     return { db, user  }
-  },
-
+  }
+  
 })
 
 const options = {

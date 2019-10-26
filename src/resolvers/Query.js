@@ -59,7 +59,7 @@ async function articleRecommendationsAll(parent, args, context, info) {
   query = `SELECT art_id, link, title, dt FROM ${lang}_arts
   WHERE art_id in
   (SELECT art_id FROM recommendations
-  WHERE uid='${uid}' AND rec_date > now() - INTERVAL '24 hours' AND cluster_num IS NULL)`
+  WHERE uid='${uid}' AND rec_date > now() - INTERVAL '24 hours')`
 
   const results = await db.query(query)
   const dedupe = _.uniqBy(results.rows, 'title')

@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 async function getRecs(db, lang, art_ids){
 
   query = `SELECT art_id, link, title, dt FROM ${lang}_arts WHERE art_id = ANY($1)`
@@ -27,7 +29,7 @@ async function articleRecommendations(parent, args, context, info) {
     throw error
   }
   
-  query = `SELECT art_id, cluster_num FROM recommendations WHERE uid='${uid}'`
+  query = `SELECT art_id, cluster_num FROM recommendations WHERE uid='${uid}' AND rec_date > now() - INTERVAL '24 hours'`
 
   const results = await db.query(query)
   const recsraw = results.rows
@@ -57,10 +59,11 @@ async function articleRecommendationsAll(parent, args, context, info) {
   query = `SELECT art_id, link, title, dt FROM ${lang}_arts
   WHERE art_id in
   (SELECT art_id FROM recommendations
-  WHERE uid='${uid}')`
+  WHERE uid='${uid}' AND rec_date > now() - INTERVAL '24 hours' AND cluster_num IS NULL)`
 
   const results = await db.query(query)
-  const recommendations = results.rows.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.dt}))
+  const dedupe = _.uniqBy(results.rows, 'title')
+  const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.dt}))
 
   return recommendations
 

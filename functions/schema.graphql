@@ -7,6 +7,8 @@ type Query {
 
   articleRecommendationsAll(lang: String!): [ClusterRecommendation!]!
 
+  articleRecommendationsHistory(lang: String!, date:String!): [ClusterRecommendation!]!
+
   article(artId: String!,lang: String!): Article
 
   translations: [Translation!]!

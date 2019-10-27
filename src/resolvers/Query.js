@@ -69,6 +69,27 @@ async function articleRecommendationsAll(parent, args, context, info) {
 
 }
 
+async function articleRecommendationsHistory(parent, args, context, info) {
+  const { db, user } = context
+  const { uid } = user
+
+  const { lang, date } = args
+  if (!user){
+    throw error
+  }
+  query = `SELECT art_id, link, title, dt FROM ${lang}_arts
+  WHERE art_id in
+  (SELECT art_id FROM recommendations
+  WHERE uid='${uid}' AND rec_date::date = '${date}')`
+
+  const results = await db.query(query)
+  const dedupe = _.uniqBy(results.rows, 'title')
+  const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.dt}))
+
+  return recommendations
+
+}
+
 async function article(parent, args, context, info) {
   const { lang, artId } = args
   const { db, user } = context
@@ -110,6 +131,7 @@ async function user(parent, args, context, info) {
 module.exports = {
   articleRecommendations,
   articleRecommendationsAll,
+  articleRecommendationsHistory,
   article,
   translations,
   user

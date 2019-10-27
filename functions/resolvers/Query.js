@@ -80,7 +80,7 @@ async function articleRecommendationsHistory(parent, args, context, info) {
   query = `SELECT art_id, link, title, dt FROM ${lang}_arts
   WHERE art_id in
   (SELECT art_id FROM recommendations
-  WHERE uid='${uid}' AND AND rec_date::date = '${date}')`
+  WHERE uid='${uid}' AND rec_date::date = '${date}')`
 
   const results = await db.query(query)
   const dedupe = _.uniqBy(results.rows, 'title')

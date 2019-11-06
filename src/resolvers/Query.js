@@ -117,7 +117,6 @@ async function translations(parent, args, context, info) {
   const results = await db.query(querytrans)
   const translations = results.rows
   return translations
-  
 }
 
 async function user(parent, args, context, info) {
@@ -128,11 +127,35 @@ async function user(parent, args, context, info) {
   
 }
 
+async function playList(parent, args, context, info) {
+  const { db, user } = context
+  const { uid } = user
+
+  const { lang } = args
+
+  if (!user){
+    throw error
+  }
+  
+  query = `SELECT art_id, link, title, dt FROM ${lang}_arts
+  WHERE art_id in
+  (SELECT art_id FROM recommendations
+  WHERE uid='${uid}' AND playlist=true)`
+
+  const results = await db.query(query)
+  const dedupe = _.uniqBy(results.rows, 'title')
+  const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.dt}))
+
+  return recommendations
+
+}
+
 module.exports = {
   articleRecommendations,
   articleRecommendationsAll,
   articleRecommendationsHistory,
   article,
   translations,
-  user
+  user,
+  playList
 }

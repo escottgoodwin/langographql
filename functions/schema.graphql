@@ -14,6 +14,8 @@ type Query {
   translations: [Translation!]!
 
   user: User!
+
+  playList(lang: String!): [ClusterRecommendation!]!
   
 }
 
@@ -32,6 +34,10 @@ type Mutation {
   updateLangs(en_rec: Boolean, es_rec: Boolean, fr_rec: Boolean, de_rec: Boolean): Message
 
   translation(lang: String, orginalText: String, artId: String): Translation!
+
+  addToPlaylist(art_id:String!): Playlist!
+
+  removeFromPlaylist(art_id:String): Playlist!
 
 }
 
@@ -85,6 +91,8 @@ type ArticleRecommendations {
 type Translation {
   orig_text: String! 
   trans_text: String! 
+  orig_lang: String
+  trans_lang: String
   art_id: String! 
   id: String!,
   uid: String!
@@ -100,6 +108,10 @@ type ClusterRecommendation {
 
 type ClusterRecommendations {
   recs: [ClusterRecommendation!]!
+}
+
+type Playlist {
+  message: String!
 }
 
 

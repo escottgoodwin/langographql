@@ -78,7 +78,7 @@ async function login(parent, args, context, info) {
   const sql2 = `UPDATE users SET online = 'yes',last_seen = $1 WHERE uid = $2`
   const { rows } = await db.query(sql2,[now, uid])
   const user1 = results.rows[0]
-  console.log(user1)
+
   return { 
     message: 'Online now',
     token: jwt.sign({ uid }, process.env.APP_SECRET),
@@ -136,16 +136,40 @@ async function translation(parent, args, context, info) {
   const { db, user } = context
   const { uid } = user
   const transText = await translate(orginalText, { from: lang, to: user.native_lang });
-  const insertTrans = 'INSERT INTO user_translations(uid, art_id, orig_text, trans_text) VALUES ($1, $2, $3, $4)'
-  const { rows } = await db.query(insertTrans, [uid, artId, orginalText, transText])
+  const insertTrans = 'INSERT INTO user_translations(uid, art_id, orig_text, trans_text, orig_lang, trans_lang) VALUES ($1, $2, $3, $4, $5, $6)'
+  const { rows } = await db.query(insertTrans, [uid, artId, orginalText, transText, lang, user.native_lang])
 
   return { 
     orig_text: orginalText, 
     trans_text: transText, 
+    orig_lang: lang, 
+    trans_lang: user.native_lang, 
     art_id: artId, 
     id:'', 
     uid
   }
+}
+
+async function addToPlaylist(parent, args, context, info) {
+
+  const { db, user } = context
+  const { uid } = user
+  const { art_id } = args
+  const sql = `UPDATE recommendations SET playlist=true WHERE uid = '${uid}' AND art_id ='${art_id}'`
+  const { rows } = await db.query(sql)
+  return { message:'Added to Playlist!' }
+
+}
+
+async function removeFromPlaylist(parent, args, context, info) {
+
+  const { db, user } = context
+  const { uid } = user
+  const { art_id } = args
+  const sql = `UPDATE recommendations SET playlist=false WHERE uid = '${uid}' AND art_id ='${art_id}'`
+  const { rows } = await db.query(sql)
+  return { message:'Removed From Playlist!' }
+
 }
 
 module.exports = {
@@ -155,5 +179,7 @@ module.exports = {
   logout,
   updateUser,
   updateLangs,
-  translation
+  translation,
+  addToPlaylist,
+  removeFromPlaylist
 }

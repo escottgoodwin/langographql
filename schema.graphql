@@ -15,7 +15,9 @@ type Query {
 
   user: User!
 
-  playList(lang: String!): [ClusterRecommendation!]!
+  playList: [ClusterRecommendation!]!
+
+  playListLang(lang: String!): [ClusterRecommendation!]!
   
 }
 

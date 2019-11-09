@@ -53,17 +53,17 @@ async function articleRecommendationsAll(parent, args, context, info) {
   const { uid } = user
 
   const { lang } = args
+
   if (!user){
     throw error
   }
-  query = `SELECT art_id, link, title, dt FROM ${lang}_arts
-  WHERE art_id in
-  (SELECT art_id FROM recommendations
-  WHERE uid='${uid}' AND rec_date > now() - INTERVAL '24 hours')`
+
+  query = `SELECT art_id, link, title, art_date, playlist FROM recommendations
+  WHERE uid='${uid}' AND rec_date > now() - INTERVAL '24 hours'`
 
   const results = await db.query(query)
   const dedupe = _.uniqBy(results.rows, 'title')
-  const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.dt}))
+  const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.art_date, playlist: r.playlist}))
 
   return recommendations
 
@@ -73,18 +73,18 @@ async function articleRecommendationsHistory(parent, args, context, info) {
   const { db, user } = context
   const { uid } = user
 
-  const { lang, date } = args
+  const { date, lang } = args
+  
   if (!user){
     throw error
   }
-  query = `SELECT art_id, link, title, dt FROM ${lang}_arts
-  WHERE art_id in
-  (SELECT art_id FROM recommendations
-  WHERE uid='${uid}' AND rec_date::date = '${date}')`
+
+  query = `SELECT art_id, link, title, art_date, playlist FROM recommendations
+  WHERE uid='${uid}' AND rec_date::date = '${date}'`
 
   const results = await db.query(query)
   const dedupe = _.uniqBy(results.rows, 'title')
-  const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.dt}))
+  const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.art_date, playlist: r.playlist}))
 
   return recommendations
 
@@ -142,9 +142,14 @@ async function playList(parent, args, context, info) {
   (SELECT art_id FROM recommendations
   WHERE uid='${uid}' AND playlist=true)`
 
-  const results = await db.query(query)
+  query1 = `SELECT ${lang}_arts.art_id, ${lang}_arts.link, ${lang}_arts.title, ${lang}_arts.dt, recommendations.playlist FROM ${lang}_arts,recommendations
+  WHERE ${lang}_arts.art_id in
+  (SELECT art_id FROM recommendations
+  WHERE uid='${uid}' AND playlist=true)`
+
+  const results = await db.query(query1)
   const dedupe = _.uniqBy(results.rows, 'title')
-  const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.dt}))
+  const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.dt, playlist: r.playlist}))
 
   return recommendations
 

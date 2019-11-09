@@ -104,6 +104,7 @@ type ClusterRecommendation {
   title: String!
   lang: String!
   date: DateTime!
+  playlist: Boolean
 }
 
 type ClusterRecommendations {

@@ -59,9 +59,10 @@ async function articleRecommendationsAll(parent, args, context, info) {
   }
 
   query = `SELECT art_id, link, title, art_date, playlist FROM recommendations
-  WHERE uid='${uid}' AND rec_date > now() - INTERVAL '24 hours'`
-
-  const results = await db.query(query)
+  WHERE uid=$1 AND lang = $2 AND rec_date > now() - INTERVAL '24 hours'`
+  const data=[uid,lang]
+  
+  const results = await db.query(query,data)
   const dedupe = _.uniqBy(results.rows, 'title')
   const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.art_date, playlist: r.playlist}))
 
@@ -79,10 +80,10 @@ async function articleRecommendationsHistory(parent, args, context, info) {
     throw error
   }
 
-  query = `SELECT art_id, link, title, art_date, playlist FROM recommendations
-  WHERE uid='${uid}' AND rec_date::date = '${date}'`
+  query = 'SELECT art_id, link, title, art_date, playlist FROM recommendations WHERE uid = $1 AND lang = $2 AND rec_date::date= $3'
+  const data=[uid,lang,date]
 
-  const results = await db.query(query)
+  const results = await db.query(query,data)
   const dedupe = _.uniqBy(results.rows, 'title')
   const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.art_date, playlist: r.playlist}))
 
@@ -93,12 +94,15 @@ async function articleRecommendationsHistory(parent, args, context, info) {
 async function article(parent, args, context, info) {
   const { lang, artId } = args
   const { db, user } = context
-  query2 = `select * from ${lang}_arts where art_id = '${artId}'`
-  const results = await db.query(query2)
 
-  querytrans = `select * from user_translations where art_id = '${artId}' AND uid ='${user.uid}'`
-  const results1 = await db.query(querytrans)
-  const { link, title, art_id, article, dt } = results.rows[0]
+  query_art = `select * from ${lang}_arts where art_id = $1`
+  const results = await db.query(query_art,[artId])
+  const { link, title, art_id, article, dt, playlist } = results.rows[0]
+
+  query_trans = 'select * from user_translations where art_id = $1 AND uid = $2'
+  const data = [artId,user.uid]
+  const results1 = await db.query(query_trans,data)
+  
 
   return {
     link,
@@ -106,6 +110,7 @@ async function article(parent, args, context, info) {
     art_id,
     article,
     date: dt,
+    playlist,
     translations: results1.rows
     }
   

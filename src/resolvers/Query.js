@@ -140,11 +140,11 @@ async function playList(parent, args, context, info) {
     throw error
   }
   
-  query = 'SELECT art_id, link, title, art_date, playlist FROM recommendations WHERE uid = $1 AND playlist = true'
+  query = 'SELECT art_id, link, title, lang, art_date, playlist FROM recommendations WHERE uid = $1 AND playlist = true'
   const results = await db.query(query,[uid])
 
   const dedupe = _.uniqBy(results.rows, 'title')
-  const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.art_date, playlist: r.playlist}))
+  const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang: r.lang, date: r.art_date, playlist: r.playlist}))
 
   return recommendations
 
@@ -160,11 +160,11 @@ async function playListLang(parent, args, context, info) {
     throw error
   }
   
-  query = 'SELECT art_id, link, title, art_date, playlist FROM recommendations WHERE uid = $1 AND lang = $2 AND playlist = true'
+  query = 'SELECT art_id, link, title, lang, art_date, playlist FROM recommendations WHERE uid = $1 AND lang = $2 AND playlist = true'
   const results = await db.query(query,[uid,lang])
 
   const dedupe = _.uniqBy(results.rows, 'title')
-  const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang, date: r.art_date, playlist: r.playlist}))
+  const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang: r.lang, date: r.art_date, playlist: r.playlist}))
 
   return recommendations
 

@@ -37,6 +37,8 @@ type Mutation {
 
   translation(lang: String, orginalText: String, artId: String): Translation!
 
+  translateSentence(lang: String, orginalText: String): Translation!
+
   addToPlaylist(art_id:String!): Playlist!
 
   removeFromPlaylist(art_id:String): Playlist!

@@ -29,7 +29,7 @@ async function singleLinkRecommendations(parent, args, context, info) {
       body: JSON.stringify({"link":link}) // body data type must match "Content-Type" header
   }
     const now = new Date()
-    const apiurl = `https://lango-rec-${transLang}-v26nfpfxqq-uc.a.run.app/apis/link_search`
+    const apiurl = `https://lango-rec-${transLang}-v26nfpfxqq-uc.a.run.app/link_search`
     const { user, db } = context
     const insertText = 'INSERT INTO linksearch(uid, link, date) VALUES ($1, $2, $3)'
     const { rows } = db.query(insertText, [user.uid, link, now])
@@ -150,6 +150,23 @@ async function translation(parent, args, context, info) {
   }
 }
 
+async function translateSentence(parent, args, context, info) {
+  const { lang, orginalText } = args
+  const { db, user } = context
+  const { uid } = user
+  const transText = await translate(orginalText, { from: lang, to: user.native_lang });
+  
+  return { 
+    orig_text: orginalText, 
+    trans_text: transText, 
+    orig_lang: lang, 
+    trans_lang: user.native_lang, 
+    art_id: '', 
+    id:'', 
+    uid
+  }
+}
+
 async function addToPlaylist(parent, args, context, info) {
 
   const { db, user } = context
@@ -180,6 +197,7 @@ module.exports = {
   updateUser,
   updateLangs,
   translation,
+  translateSentence,
   addToPlaylist,
   removeFromPlaylist
 }

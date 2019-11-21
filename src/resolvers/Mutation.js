@@ -189,6 +189,20 @@ async function removeFromPlaylist(parent, args, context, info) {
 
 }
 
+
+async function addHistoryLink(parent, args, context, info) {
+
+  const { db, user } = context
+  const { uid } = user
+  const now = new Date()
+  const { link } = args
+  const sql = 'INSERT INTO user_links (uid, link, date) VALUES ($1, $2, $3)'
+  const data = [uid, link, now]
+  const { rows } = await db.query(sql,data)
+  return { message:'Link Added' }
+
+}
+
 module.exports = {
   singleLinkRecommendations,
   signup,
@@ -199,5 +213,6 @@ module.exports = {
   translation,
   translateSentence,
   addToPlaylist,
-  removeFromPlaylist
+  removeFromPlaylist,
+  addHistoryLink
 }

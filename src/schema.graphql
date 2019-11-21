@@ -43,6 +43,8 @@ type Mutation {
 
   removeFromPlaylist(art_id:String): Playlist!
 
+  addHistoryLink(link: String!): Playlist!
+
 }
 
 type User {

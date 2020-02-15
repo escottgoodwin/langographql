@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var moment = require('moment');
 
 async function getRecs(db, lang, art_ids){
 
@@ -70,6 +71,30 @@ async function articleRecommendationsAll(parent, args, context, info) {
 
 }
 
+async function articleRecommendationsAllLangs(parent, args, context, info) {
+  const { db, user } = context
+  const { uid } = user
+  const { currDate } = args
+
+  if (!user){
+    throw error
+  }
+
+  const curr = moment(currDate).format()
+  const yesterday = moment(currDate).subtract(1, 'days')
+ 
+  query = `SELECT art_id, link, title, art_date, playlist, lang FROM recommendations
+  WHERE uid=$1 AND rec_date BETWEEN $2 AND $3`
+  const data=[uid,yesterday,curr]
+  
+  const results = await db.query(query,data)
+  const dedupe = _.uniqBy(results.rows, 'title')
+  const recommendations = dedupe.map(r => ({art_id: r.art_id,  link: r.link, title: r.title, lang: r.lang, date: r.art_date, playlist: r.playlist}))
+
+  return recommendations
+
+}
+
 async function articleRecommendationsHistory(parent, args, context, info) {
   const { db, user } = context
   const { uid } = user
@@ -110,7 +135,6 @@ async function article(parent, args, context, info) {
     art_id,
     article,
     date: dt,
-    playlist,
     translations: results1.rows
     }
   
@@ -173,6 +197,7 @@ async function playListLang(parent, args, context, info) {
 module.exports = {
   articleRecommendations,
   articleRecommendationsAll,
+  articleRecommendationsAllLangs,
   articleRecommendationsHistory,
   article,
   translations,

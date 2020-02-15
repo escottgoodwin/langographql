@@ -80,7 +80,7 @@ async function login(parent, args, context, info) {
   const user1 = results.rows[0]
 
   return { 
-    message: 'Online now',
+    message: 'Signed In! Online now',
     token: jwt.sign({ uid }, process.env.APP_SECRET),
     user:user1
   }
@@ -90,9 +90,9 @@ async function login(parent, args, context, info) {
 async function logout(parent, args, context, info) {
   const { db, user } = context
   const { uid } = user 
-  const sql = `UPDATE users SET online = 'no' WHERE uid = '${uid}'`
-  const { rows } = await db.query(sql)
-  return { message: 'Offline now' }
+  const sql = `UPDATE users SET online = 'no' WHERE uid = $1`
+  const { rows } = await db.query(sql,[uid])
+  return { message: 'Signed Outed! Offline now.' }
 }
 
 async function updateUser(parent, args, context, info) {

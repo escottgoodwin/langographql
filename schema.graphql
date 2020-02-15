@@ -6,6 +6,8 @@ type Query {
   articleRecommendations(lang: String!): [ClusterRecommendations!]!
 
   articleRecommendationsAll(lang: String!): [ClusterRecommendation!]!
+  
+  articleRecommendationsAllLangs(currDate: String!): [ClusterRecommendation!]!
 
   articleRecommendationsHistory(lang: String!, date: String!): [ClusterRecommendation!]!
 
@@ -75,7 +77,6 @@ type Article {
   art_id: String!
   article: String!
   date: DateTime!
-  playList: Boolean
   translations: [Translation!]!
 }
 

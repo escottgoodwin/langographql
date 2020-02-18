@@ -80,19 +80,18 @@ async function login(parent, args, context, info) {
   const user1 = results.rows[0]
 
   return { 
-    message: 'Signed In! Online now',
+    message: 'Online now',
     token: jwt.sign({ uid }, process.env.APP_SECRET),
     user:user1
   }
   
 }
 
-async function logout(parent, args, context, info) {
-  const { db, user } = context
-  const { uid } = user 
+async function logout(parent, { uid }, context, info) {
+  const { db } = context
   const sql = `UPDATE users SET online = 'no' WHERE uid = $1`
   const { rows } = await db.query(sql,[uid])
-  return { message: 'Signed Outed! Offline now.' }
+  return { message: 'Offline now' }
 }
 
 async function updateUser(parent, args, context, info) {
@@ -188,7 +187,6 @@ async function removeFromPlaylist(parent, args, context, info) {
   return { message:'Removed From Playlist!' }
 
 }
-
 
 async function addHistoryLink(parent, args, context, info) {
 

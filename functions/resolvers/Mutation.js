@@ -87,11 +87,10 @@ async function login(parent, args, context, info) {
   
 }
 
-async function logout(parent, args, context, info) {
-  const { db, user } = context
-  const { uid } = user 
-  const sql = `UPDATE users SET online = 'no' WHERE uid = '${uid}'`
-  const { rows } = await db.query(sql)
+async function logout(parent, { uid }, context, info) {
+  const { db } = context
+  const sql = `UPDATE users SET online = 'no' WHERE uid = $1`
+  const { rows } = await db.query(sql,[uid])
   return { message: 'Offline now' }
 }
 

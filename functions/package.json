@@ -27,7 +27,7 @@
     "install": "^0.13.0",
     "jsonwebtoken": "8.3.0",
     "moment": "^2.24.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "npm": "^6.11.3",
     "pg": "^7.12.1",
     "translate": "^1.1.0",
